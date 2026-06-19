@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Reservation } from './models/reservation.model';
@@ -17,29 +21,38 @@ export class ReservationsService {
     const t = await this.sequelize.transaction();
 
     try {
-      const reservation = await this.reservationModel.create({
-        userId,
-        showtimeId: dto.showtimeId,
-      }, { transaction: t });
+      const reservation = await this.reservationModel.create(
+        {
+          userId,
+          showtimeId: dto.showtimeId,
+        } as any,
+        { transaction: t },
+      );
 
-      const seatsToInsert = dto.seats.map(seat => ({
+      const seatsToInsert = dto.seats.map((seat) => ({
         reservationId: reservation.id,
         showtimeId: dto.showtimeId,
         rowNumber: seat.rowNumber,
         columnNumber: seat.columnNumber,
       }));
 
-      await this.seatModel.bulkCreate(seatsToInsert, { transaction: t });
-      await t.commit();
-      
-      return await this.reservationModel.findByPk(reservation.id, {
-        include: [ReservedSeat]
+      await this.seatModel.bulkCreate(seatsToInsert as any, {
+        transaction: t,
       });
+      await t.commit();
 
-    } catch (error: any) {
+      return await this.reservationModel.findByPk(reservation.id, {
+        include: [ReservedSeat],
+      });
+    } catch (error: unknown) {
       await t.rollback();
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        throw new BadRequestException('Uno o más asientos seleccionados ya están reservados.');
+      if (
+        error instanceof Error &&
+        error.name === 'SequelizeUniqueConstraintError'
+      ) {
+        throw new BadRequestException(
+          'Uno o mas asientos seleccionados ya estan reservados.',
+        );
       }
       throw new InternalServerErrorException('Error procesando la reserva');
     }

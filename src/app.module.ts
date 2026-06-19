@@ -29,7 +29,7 @@ import { ReservedSeat } from './modules/reservations/models/reserved-seat.model'
       database: process.env.DB_NAME || 'cinema_db',
       models: [User, Movie, Room, Showtime, Reservation, ReservedSeat],
       autoLoadModels: true,
-      synchronize: true, // Para desarrollo
+      synchronize: true,
     }),
     UsersModule,
     AuthModule,

@@ -1,5 +1,17 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
+
+interface AuthenticatedUser {
+  id: string;
+  email: string;
+  role: string;
+}
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -10,10 +22,11 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    
-    if (!requiredRoles) return true; // Ruta pública si no hay roles definidos
-    
-    const { user } = context.switchToHttp().getRequest();
+
+    if (!requiredRoles) return true;
+
+    const request = context.switchToHttp().getRequest<Request>();
+    const user = request.user as AuthenticatedUser | undefined;
     if (!user) throw new ForbiddenException('Usuario no autenticado');
 
     if (!requiredRoles.includes(user.role)) {

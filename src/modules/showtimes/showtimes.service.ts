@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Showtime } from './models/showtime.model';
@@ -18,16 +22,14 @@ export class ShowtimesService {
 
   async create(dto: CreateShowtimeDto) {
     const movie = await this.movieModel.findByPk(dto.movieId);
-    if (!movie) throw new BadRequestException('Película no encontrada');
+    if (!movie) throw new BadRequestException('Pelicula no encontrada');
 
     const room = await this.roomModel.findByPk(dto.roomId);
     if (!room) throw new BadRequestException('Sala no encontrada');
 
-    // Calcular endTime basado en la duración de la película + 30 min de limpieza
     const start = new Date(dto.startTime);
     const end = new Date(start.getTime() + (movie.duration + 30) * 60000);
 
-    // Lógica para prevenir superposiciones
     const overlappingShowtime = await this.showtimeModel.findOne({
       where: {
         roomId: dto.roomId,
@@ -35,29 +37,43 @@ export class ShowtimesService {
           {
             startTime: { [Op.lt]: end },
             endTime: { [Op.gt]: start },
-          }
-        ]
-      }
+          },
+        ],
+      },
     });
 
     if (overlappingShowtime) {
-      throw new BadRequestException('El horario se superpone con otra función en esta sala');
+      throw new BadRequestException(
+        'El horario se superpone con otra funcion en esta sala',
+      );
     }
 
-    return this.showtimeModel.create({ ...dto, endTime: end, price: dto.price } as any);
+    return this.showtimeModel.create({
+      ...dto,
+      endTime: end,
+      price: dto.price,
+    } as any);
   }
 
   async getSeats(showtimeId: string) {
-    const showtime = await this.showtimeModel.findByPk(showtimeId, { include: [Room] });
-    if (!showtime) throw new NotFoundException('Función no encontrada');
+    const showtime = await this.showtimeModel.findByPk(showtimeId, {
+      include: [Room],
+    });
+    if (!showtime) throw new NotFoundException('Funcion no encontrada');
 
     const reservedSeats = await this.seatModel.findAll({
       where: { showtimeId },
     });
 
     return {
-      room: { rows: showtime.room.totalRows, columns: showtime.room.totalColumns },
-      reservedSeats: reservedSeats.map(s => ({ row: s.rowNumber, column: s.columnNumber }))
+      room: {
+        rows: showtime.room.totalRows,
+        columns: showtime.room.totalColumns,
+      },
+      reservedSeats: reservedSeats.map((s) => ({
+        row: s.rowNumber,
+        column: s.columnNumber,
+      })),
     };
   }
 }

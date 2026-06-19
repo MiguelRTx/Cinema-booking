@@ -17,7 +17,9 @@ export class UsersService implements OnModuleInit {
 
   private async seedAdmin() {
     try {
-      const adminExists = await this.userModel.findOne({ where: { role: UserRole.ADMIN } });
+      const adminExists = await this.userModel.findOne({
+        where: { role: UserRole.ADMIN },
+      });
       if (!adminExists) {
         const hashedPassword = await bcrypt.hash('admin123', 10);
         await this.userModel.create({
@@ -25,10 +27,12 @@ export class UsersService implements OnModuleInit {
           password: hashedPassword,
           role: UserRole.ADMIN,
         } as any);
-        console.log('✅ Usuario Administrador por defecto creado: admin@cine.com | Pass: admin123');
+        console.log(
+          'Usuario Administrador por defecto creado: admin@cine.com | Pass: admin123',
+        );
       }
-    } catch (e) {
-      // Ignorar error de tabla no existente durante el primer arranque si sync ocurre después
+    } catch {
+      void 0;
     }
   }
 

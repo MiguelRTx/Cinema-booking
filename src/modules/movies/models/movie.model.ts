@@ -3,14 +3,18 @@ import { Showtime } from '../../showtimes/models/showtime.model';
 
 @Table({ tableName: 'movies' })
 export class Movie extends Model {
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    primaryKey: true,
+  })
   declare id: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  duration: number; // en minutos
+  duration: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
   genre: string;

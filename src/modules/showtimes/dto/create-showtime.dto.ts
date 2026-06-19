@@ -1,4 +1,10 @@
-import { IsUUID, IsDateString, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import {
+  IsUUID,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  Min,
+} from 'class-validator';
 
 export class CreateShowtimeDto {
   @IsUUID()

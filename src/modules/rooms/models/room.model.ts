@@ -3,7 +3,11 @@ import { Showtime } from '../../showtimes/models/showtime.model';
 
 @Table({ tableName: 'rooms' })
 export class Room extends Model {
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    primaryKey: true,
+  })
   declare id: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
