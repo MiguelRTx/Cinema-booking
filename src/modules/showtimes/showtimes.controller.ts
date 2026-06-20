@@ -21,4 +21,9 @@ export class ShowtimesController {
   getSeats(@Param('id') id: string) {
     return this.showtimesService.getSeats(id);
   }
+  @Get('movie/:movieId')
+  @UseGuards(JwtAuthGuard)
+  getByMovie(@Param('movieId') movieId: string) {
+    return this.showtimesService.getByMovie(movieId);
+  }
 }

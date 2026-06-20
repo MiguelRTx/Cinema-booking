@@ -28,7 +28,8 @@ export class ShowtimesService {
     if (!room) throw new BadRequestException('Sala no encontrada');
 
     const start = new Date(dto.startTime);
-    const end = new Date(start.getTime() + (movie.duration + 30) * 60000);
+    const movieDuration = Number(movie.duration) || 120;
+    const end = new Date(start.getTime() + (movieDuration + 30) * 60000);
 
     const overlappingShowtime = await this.showtimeModel.findOne({
       where: {
@@ -75,5 +76,12 @@ export class ShowtimesService {
         column: s.columnNumber,
       })),
     };
+  }
+  async getByMovie(movieId: string) {
+    return this.showtimeModel.findAll({
+      where: { movieId },
+      include: [Room],
+      order: [['startTime', 'ASC']],
+    });
   }
 }
