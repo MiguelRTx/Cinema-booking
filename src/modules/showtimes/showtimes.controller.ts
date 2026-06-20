@@ -26,4 +26,10 @@ export class ShowtimesController {
   getByMovie(@Param('movieId') movieId: string) {
     return this.showtimesService.getByMovie(movieId);
   }
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  findAll() {
+    return this.showtimesService.findAll();
+  }
 }

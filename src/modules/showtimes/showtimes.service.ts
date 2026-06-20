@@ -84,4 +84,10 @@ export class ShowtimesService {
       order: [['startTime', 'ASC']],
     });
   }
+  async findAll() {
+    return this.showtimeModel.findAll({
+      include: [Movie, Room],
+      order: [['startTime', 'DESC']],
+    });
+  }
 }
