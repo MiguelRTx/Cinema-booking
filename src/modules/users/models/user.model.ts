@@ -16,16 +16,16 @@ export class User extends Model {
   declare id: string;
 
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
-  email: string;
+  declare email: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  password: string;
+  declare password: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
     defaultValue: UserRole.CLIENT,
   })
-  role: UserRole;
+  declare role: UserRole;
 
   @HasMany(() => Reservation)
   reservations: Reservation[];
