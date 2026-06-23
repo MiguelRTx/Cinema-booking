@@ -28,6 +28,11 @@ export class ShowtimesService {
     if (!room) throw new BadRequestException('Sala no encontrada');
 
     const start = new Date(dto.startTime);
+
+    if (start < new Date()) {
+      throw new BadRequestException('La fecha y hora de la función deben ser posteriores a la fecha y hora actual.');
+    }
+
     const movieDuration = Number(movie.duration) || 120;
     const end = new Date(start.getTime() + (movieDuration + 30) * 60000);
 
@@ -61,7 +66,8 @@ export class ShowtimesService {
       include: [Room],
     });
     if (!showtime) throw new NotFoundException('Funcion no encontrada');
-    if (!showtime.room) throw new NotFoundException('Sala de la funcion no encontrada');
+    if (!showtime.room)
+      throw new NotFoundException('Sala de la funcion no encontrada');
 
     const reservedSeats = await this.seatModel.findAll({
       where: { showtimeId },
@@ -80,7 +86,12 @@ export class ShowtimesService {
   }
   async getByMovie(movieId: string) {
     return this.showtimeModel.findAll({
-      where: { movieId },
+      where: {
+        movieId,
+        startTime: {
+          [Op.gt]: new Date(),
+        },
+      },
       include: [Room],
       order: [['startTime', 'ASC']],
     });
