@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+  @layer base {
+    :root {
+      --color-bg-primary: #09090f;
+      --color-bg-secondary: #12121a;
+      --color-bg-card: #1a1a2e;
+      --color-accent-primary: #e94560;
+      --color-accent-secondary: #f5a623;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #a0a0b0;
+      --color-seat-available: #22c55e;
+      --color-seat-selected: #e94560;
+      --color-seat-reserved: #374151;
+    }
+
+    body {
+      @apply bg-gray-950 text-white antialiased;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      @apply box-border;
+    }
+
+    ::-webkit-scrollbar {
+      @apply w-1.5;
+    }
+
+    ::-webkit-scrollbar-track {
+      @apply bg-gray-950;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      @apply bg-gray-700 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-500;
+    }
+  }
+
+  /* ── Animations ─────────────────────────────────────────────────── */
+  @layer utilities {
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.4s ease-out both;
+    }
+
+    .animate-scale-in {
+      animation: scaleIn 0.2s ease-out both;
+    }
+
+    .stagger-children > * {
+      animation: fadeInUp 0.4s ease-out both;
+    }
+    .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+    .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+    .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+    .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+    .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+    .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+    .stagger-children > *:nth-child(n+7) { animation-delay: 360ms; }
+  }
