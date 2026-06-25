@@ -2,14 +2,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth.store';
 import { FullPageSpinner } from '../../components/ui/Spinner';
 
-export function PrivateRoute() {
-  const { isAuthenticated, user, token } = useAuthStore();
+export function ClientOnlyRoute() {
+  const { user, token } = useAuthStore();
 
   if (token === undefined) return <FullPageSpinner />;
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
   if (user?.role === 'ADMIN') {
     return <Navigate to="/admin" replace />;

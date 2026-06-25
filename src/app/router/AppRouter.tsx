@@ -6,6 +6,8 @@ import { AdminLayout } from '../../layouts/AdminLayout';
 import { PrivateRoute } from './PrivateRoute';
 import { AdminRoute } from './AdminRoute';
 import { FullPageSpinner } from '../../components/ui/Spinner';
+import { ClientOnlyRoute } from './ClientOnlyRoute';
+import { GuestRoute } from './GuestRoute';
 
 
 const BillboardPage = lazy(() => import('../../features/movies/pages/BillboardPage').then(m => ({ default: m.BillboardPage })));
@@ -30,31 +32,45 @@ const ShowtimesAdminPage = lazy(() => import('../../features/showtimes/pages/Sho
 const ShowtimeSelectionPage = lazy(() => import('../../features/showtimes/pages/ShowtimeSelectionPage').then(m => ({ default: m.ShowtimeSelectionPage })));
 const router = createBrowserRouter([
   {
-    element: <PublicLayout />,
-    children: [
-      { path: '/', element: <BillboardPage /> },
-      { path: '/movies/:id', element: <MovieDetailPage /> },
-      { path: '/login', element: <LoginPage /> },
-      { path: '/register', element: <RegisterPage /> },
-    ],
-  },
-
-{
-    element: <PrivateRoute />,
+    element: <GuestRoute />,
     children: [
       {
-        element: <ClientLayout />,
+        element: <PublicLayout />,
         children: [
-          { path: '/showtimes/select', element: <ShowtimeSelectionPage /> },
-          { path: '/showtimes/:id/seats', element: <SeatSelectionPage /> },
-          { path: '/reservations/confirm', element: <ConfirmReservationPage /> },
-          { path: '/my-reservations', element: <MyReservationsPage /> },
+          { path: '/login', element: <LoginPage /> },
+          { path: '/register', element: <RegisterPage /> },
+        ],
+      },
+    ],
+  },
+  {
+    element: <ClientOnlyRoute />,
+    children: [
+      {
+        element: <PublicLayout />,
+        children: [
+          { path: '/', element: <BillboardPage /> },
+          { path: '/movies/:id', element: <MovieDetailPage /> },
+        ],
+      },
+      {
+        element: <PrivateRoute />,
+        children: [
+          {
+            element: <ClientLayout />,
+            children: [
+              { path: '/showtimes/select', element: <ShowtimeSelectionPage /> },
+              { path: '/showtimes/:id/seats', element: <SeatSelectionPage /> },
+              { path: '/reservations/confirm', element: <ConfirmReservationPage /> },
+              { path: '/my-reservations', element: <MyReservationsPage /> },
+            ],
+          },
         ],
       },
     ],
   },
 
-{
+  {
     element: <AdminRoute />,
     children: [
       {

@@ -8,7 +8,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 1000 * 60 * 2, // 2 minutes default
+      staleTime: 1000 * 60 * 2,
       refetchOnWindowFocus: false,
     },
     mutations: {
@@ -21,7 +21,6 @@ function AuthGuard({ children }: { children: ReactNode }) {
   const { token, logout } = useAuthStore();
 
   useEffect(() => {
-    // On app boot: clear expired tokens
     if (token && isTokenExpired(token)) {
       logout();
     }
