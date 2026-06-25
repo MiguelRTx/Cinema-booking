@@ -47,7 +47,6 @@ export function useRoomDesigner({ roomId, rows, cols }: UseRoomDesignerOptions) 
   const isPainting = useRef(false);
 
   const [cells, setCells] = useState<Record<string, CellType>>(() => {
-    // Try to load saved layout first
     const saved = loadRoomLayout(roomId);
     if (saved) return saved;
     return buildDefaultCells(rows, cols);

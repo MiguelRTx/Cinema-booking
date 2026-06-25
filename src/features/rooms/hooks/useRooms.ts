@@ -43,13 +43,3 @@ export function useUpdateRoom(id: string) {
     },
   });
 }
-
-export function useDeleteRoom() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => roomsService.remove(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: roomKeys.all });
-    },
-  });
-}

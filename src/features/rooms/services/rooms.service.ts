@@ -21,8 +21,4 @@ export const roomsService = {
     const response = await api.patch<Room>(`/rooms/${id}`, data);
     return response.data;
   },
-
-  async remove(id: string): Promise<void> {
-    await api.delete(`/rooms/${id}`);
-  },
 };

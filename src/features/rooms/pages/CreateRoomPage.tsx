@@ -25,7 +25,6 @@ export function CreateRoomPage() {
   const onSubmit = (data: RoomFormData) => {
     createRoom(data, {
       onSuccess: (room) => {
-        // Redirect to edit/design page
         navigate(`/admin/rooms/${room.id}/edit`);
       },
     });

@@ -1,19 +1,13 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RiAddLine, RiEditLine, RiDeleteBinLine, RiPaintBrushLine, RiBuilding4Line } from 'react-icons/ri';
-import { useRooms, useDeleteRoom } from '../hooks/useRooms';
+import { RiAddLine, RiEditLine, RiPaintBrushLine, RiBuilding4Line } from 'react-icons/ri';
+import { useRooms} from '../hooks/useRooms';
 import { Button } from '../../../components/ui/Button';
-import { Modal } from '../../../components/ui/Modal';
 import { PageHeader } from '../../../components/shared/PageHeader';
 import { EmptyState } from '../../../components/ui/EmptyState';
-import type { Room } from '../../../types/room.types';
 
 export function RoomsPage() {
   const navigate = useNavigate();
   const { data: rooms, isLoading } = useRooms();
-  const { mutate: deleteRoom, isPending: isDeleting } = useDeleteRoom();
-  const [deleteTarget, setDeleteTarget] = useState<Room | null>(null);
-
   return (
     <div>
       <PageHeader
@@ -109,45 +103,11 @@ export function RoomsPage() {
                 >
                   <RiEditLine className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => setDeleteTarget(room)}
-                  aria-label={`Eliminar ${room.name}`}
-                >
-                  <RiDeleteBinLine className="w-4 h-4" />
-                </Button>
               </div>
             </div>
           ))
         )}
       </div>
-
-      <Modal
-        isOpen={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-        title="Eliminar sala"
-        size="sm"
-      >
-        <p className="text-gray-300 mb-6">
-          ¿Estás seguro de que deseas eliminar la sala{' '}
-          <strong className="text-white">"{deleteTarget?.name}"</strong>?
-          Esta acción eliminará también todas las funciones asociadas.
-        </p>
-        <div className="flex justify-end gap-3">
-          <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
-          <Button
-            variant="danger"
-            loading={isDeleting}
-            id="confirm-delete-room"
-            onClick={() =>
-              deleteRoom(deleteTarget!.id, { onSuccess: () => setDeleteTarget(null) })
-            }
-          >
-            Eliminar
-          </Button>
-        </div>
-      </Modal>
     </div>
   );
 }
