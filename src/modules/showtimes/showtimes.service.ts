@@ -73,10 +73,18 @@ export class ShowtimesService {
       where: { showtimeId },
     });
 
+    // Sequelize a veces devuelve JSONB como string; parseamos defensivamente
+    const rawLayout = showtime.room.layout;
+    let layout: Record<string, string> | null = null;
+    if (rawLayout) {
+      layout = typeof rawLayout === 'string' ? JSON.parse(rawLayout) : rawLayout;
+    }
+
     return {
       room: {
         rows: showtime.room.totalRows,
         columns: showtime.room.totalColumns,
+        layout,
       },
       reservedSeats: reservedSeats.map((s) => ({
         row: s.rowNumber,

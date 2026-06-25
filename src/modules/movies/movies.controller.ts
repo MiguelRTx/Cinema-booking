@@ -26,17 +26,6 @@ export class MoviesController {
   create(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.create(createMovieDto);
   }
-
-  @Get()
-  findAll(@Query('genre') genre?: string, @Query('search') search?: string) {
-    return this.moviesService.findAll(genre, search);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.moviesService.findOne(id);
-  }
-
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -49,5 +38,19 @@ export class MoviesController {
   @Roles('ADMIN')
   remove(@Param('id') id: string) {
     return this.moviesService.remove(id);
+  }
+
+
+
+
+
+  @Get()
+  findAll(@Query('genre') genre?: string, @Query('search') search?: string) {
+    return this.moviesService.findAll(genre, search);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.moviesService.findOne(id);
   }
 }
