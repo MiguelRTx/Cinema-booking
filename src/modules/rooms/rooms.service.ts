@@ -26,9 +26,4 @@ export class RoomsService {
     const room = await this.findOne(id);
     return room.update(updateRoomDto);
   }
-
-  async remove(id: string): Promise<void> {
-    const room = await this.findOne(id);
-    await room.destroy();
-  }
 }
