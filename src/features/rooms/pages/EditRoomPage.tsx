@@ -91,7 +91,7 @@ export function EditRoomPage() {
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           {saved && (
             <div className="mb-4 p-3 bg-green-950/50 border border-green-800 rounded-lg text-sm text-green-400 flex items-center gap-2">
-              ✅ Diseño guardado correctamente en este dispositivo
+              ✅ Diseño guardado correctamente en la base de datos
             </div>
           )}
           <RoomDesigner

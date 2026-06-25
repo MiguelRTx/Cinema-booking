@@ -1,5 +1,6 @@
 import type { Movie } from './movie.types';
 import type { Room } from './room.types';
+import type { CellType } from './room.types';
 
 export interface Showtime {
   id: string;
@@ -23,6 +24,7 @@ export interface ShowtimeSeatsResponse {
   room: {
     rows: number;
     columns: number;
+    layout: Record<string, CellType> | null;
   };
   reservedSeats: {
     row: number;

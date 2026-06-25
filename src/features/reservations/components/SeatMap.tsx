@@ -2,7 +2,6 @@ import type { ShowtimeSeatsResponse } from '../../../types/showtime.types';
 import type { SeatPosition } from '../../../types/reservation.types';
 import type { CellType } from '../../../types/room.types';
 import { RoomCell } from '../../rooms/components/RoomCell';
-import { loadRoomLayout } from '../../rooms/hooks/useRoomDesigner';
 
 interface SeatMapProps {
   showtimeId: string;
@@ -16,17 +15,21 @@ function buildReservedSet(reservedSeats: ShowtimeSeatsResponse['reservedSeats'])
   return new Set(reservedSeats.map((s) => `${s.row}-${s.column}`));
 }
 
-export function SeatMap({ roomId, seatsData, selectedSeats, onSeatToggle }: Omit<SeatMapProps, 'showtimeId'> & { showtimeId?: string }) {
+export function SeatMap({ seatsData, selectedSeats, onSeatToggle }: Omit<SeatMapProps, 'showtimeId'> & { showtimeId?: string }) {
   const { room, reservedSeats } = seatsData;
   const reservedSet = buildReservedSet(reservedSeats);
   const selectedSet = new Set(selectedSeats.map((s) => `${s.rowNumber}-${s.columnNumber}`));
 
-  // Load custom layout from localStorage if exists
-  const savedLayout = roomId ? loadRoomLayout(roomId) : null;
+  // Layout viene del backend (columna layout de la sala)
+  // Parse defensivo por si llega como string serializado
+  const rawLayout = room.layout;
+  const savedLayout: Record<string, CellType> | null = rawLayout
+    ? (typeof rawLayout === 'string' ? JSON.parse(rawLayout) : rawLayout)
+    : null;
 
   const getCellType = (row: number, col: number): CellType => {
     if (!savedLayout) return 'seat';
-    return savedLayout[`${row}-${col}`] ?? 'seat';
+    return (savedLayout[`${row}-${col}`] as CellType) ?? 'seat';
   };
 
   const getSelectionState = (row: number, col: number) => {
