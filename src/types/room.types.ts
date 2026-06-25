@@ -3,13 +3,14 @@ export interface Room {
   name: string;
   totalRows: number;
   totalColumns: number;
+  layout: Record<string, CellType> | null;
 }
 
-export type CreateRoomPayload = Omit<Room, 'id'>;
+export type CreateRoomPayload = Omit<Room, 'id' | 'layout'>;
 export type UpdateRoomPayload = Partial<CreateRoomPayload>;
 
 // ──────────────────────────────────────────────
-// Room Designer types (frontend-only persistence)
+// Room Designer types
 // ──────────────────────────────────────────────
 export type CellType = 'seat' | 'aisle' | 'empty';
 
@@ -20,11 +21,3 @@ export interface RoomCell {
 }
 
 export type DesignerTool = 'seat' | 'aisle' | 'empty';
-
-export interface RoomLayout {
-  roomId: string;
-  rows: number;
-  cols: number;
-  /** key format: "row-col" */
-  cells: Record<string, CellType>;
-}

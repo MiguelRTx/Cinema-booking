@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { DesignerTool } from '../../../types/room.types';
+import type { CellType, DesignerTool } from '../../../types/room.types';
 import { useRoomDesigner } from '../hooks/useRoomDesigner';
 import { RoomCell } from './RoomCell';
 import { Button } from '../../../components/ui/Button';
@@ -16,7 +16,8 @@ interface RoomDesignerProps {
   roomId: string;
   rows: number;
   cols: number;
-  onSaved?: () => void;
+  initialLayout?: Record<string, CellType> | null;
+  onSaved?: (cells: Record<string, CellType>) => void;
 }
 
 const tools: { id: DesignerTool; label: string; icon: React.ReactNode; description: string }[] = [
@@ -40,8 +41,8 @@ const tools: { id: DesignerTool; label: string; icon: React.ReactNode; descripti
   },
 ];
 
-export function RoomDesigner({ roomId, rows, cols, onSaved }: RoomDesignerProps) {
-  const designer = useRoomDesigner({ roomId, rows, cols });
+export function RoomDesigner({ roomId, rows, cols, initialLayout, onSaved }: RoomDesignerProps) {
+  const designer = useRoomDesigner({ roomId, rows, cols, initialLayout });
 
   // Global mouseup to stop painting even if released outside grid
   useEffect(() => {
@@ -52,7 +53,7 @@ export function RoomDesigner({ roomId, rows, cols, onSaved }: RoomDesignerProps)
 
   const handleSave = () => {
     designer.save();
-    onSaved?.();
+    onSaved?.(designer.cells);
   };
 
   return (

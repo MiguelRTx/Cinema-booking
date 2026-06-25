@@ -1,26 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import type { CellType, DesignerTool, RoomLayout } from '../../../types/room.types';
-
-const STORAGE_KEY_PREFIX = 'room-layout-';
-
-function getStorageKey(roomId: string) {
-  return `${STORAGE_KEY_PREFIX}${roomId}`;
-}
-
-export function loadRoomLayout(roomId: string): Record<string, CellType> | null {
-  try {
-    const raw = localStorage.getItem(getStorageKey(roomId));
-    if (!raw) return null;
-    return JSON.parse(raw) as Record<string, CellType>;
-  } catch {
-    return null;
-  }
-}
-
-export function saveRoomLayout(layout: RoomLayout): void {
-  const { roomId, cells } = layout;
-  localStorage.setItem(getStorageKey(roomId), JSON.stringify(cells));
-}
+import type { CellType, DesignerTool } from '../../../types/room.types';
 
 function buildCellKey(row: number, col: number): string {
   return `${row}-${col}`;
@@ -40,15 +19,16 @@ interface UseRoomDesignerOptions {
   roomId: string;
   rows: number;
   cols: number;
+  initialLayout?: Record<string, CellType> | null;
+  onSave?: (cells: Record<string, CellType>) => void;
 }
 
-export function useRoomDesigner({ roomId, rows, cols }: UseRoomDesignerOptions) {
+export function useRoomDesigner({ rows, cols, initialLayout, onSave }: UseRoomDesignerOptions) {
   const [activeTool, setActiveTool] = useState<DesignerTool>('seat');
   const isPainting = useRef(false);
 
   const [cells, setCells] = useState<Record<string, CellType>>(() => {
-    const saved = loadRoomLayout(roomId);
-    if (saved) return saved;
+    if (initialLayout && Object.keys(initialLayout).length > 0) return initialLayout;
     return buildDefaultCells(rows, cols);
   });
 
@@ -79,8 +59,8 @@ export function useRoomDesigner({ roomId, rows, cols }: UseRoomDesignerOptions) 
   }, [rows, cols]);
 
   const save = useCallback(() => {
-    saveRoomLayout({ roomId, rows, cols, cells });
-  }, [roomId, rows, cols, cells]);
+    onSave?.(cells);
+  }, [cells, onSave]);
 
   const getCellType = useCallback((row: number, col: number): CellType => {
     return cells[buildCellKey(row, col)] ?? 'seat';

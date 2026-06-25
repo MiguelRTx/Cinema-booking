@@ -1,5 +1,5 @@
 import { api } from '../../../services/axios';
-import type { Room, CreateRoomPayload, UpdateRoomPayload } from '../../../types/room.types';
+import type { Room, CreateRoomPayload, UpdateRoomPayload, CellType } from '../../../types/room.types';
 
 export const roomsService = {
   async getAll(): Promise<Room[]> {
@@ -21,4 +21,10 @@ export const roomsService = {
     const response = await api.patch<Room>(`/rooms/${id}`, data);
     return response.data;
   },
+
+  async updateLayout(id: string, layout: Record<string, CellType>): Promise<Room> {
+    const response = await api.patch<Room>(`/rooms/${id}/layout`, { layout });
+    return response.data;
+  },
 };
+

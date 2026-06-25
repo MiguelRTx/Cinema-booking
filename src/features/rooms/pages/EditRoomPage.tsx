@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiArrowLeftLine, RiSave3Line, RiPaintBrushLine, RiSettings4Line } from 'react-icons/ri';
-import { useRoom, useUpdateRoom } from '../hooks/useRooms';
+import { useRoom, useUpdateRoom, useUpdateRoomLayout } from '../hooks/useRooms';
 import { roomSchema, type RoomFormData } from '../schemas/room.schema';
 import { RoomDesigner } from '../components/RoomDesigner';
 import { Input } from '../../../components/ui/Input';
@@ -19,6 +19,7 @@ export function EditRoomPage() {
   const navigate = useNavigate();
   const { data: room, isLoading } = useRoom(id!);
   const { mutate: updateRoom, isPending } = useUpdateRoom(id!);
+  const { mutate: updateLayout } = useUpdateRoomLayout(id!);
   const [activeTab, setActiveTab] = useState<Tab>('design');
   const [saved, setSaved] = useState(false);
 
@@ -97,7 +98,11 @@ export function EditRoomPage() {
             roomId={room.id}
             rows={room.totalRows}
             cols={room.totalColumns}
-            onSaved={() => setSaved(true)}
+            initialLayout={room.layout}
+            onSaved={(cells) => {
+              updateLayout(cells);
+              setSaved(true);
+            }}
           />
         </div>
       )}
