@@ -10,6 +10,7 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { UpdateLayoutDto } from './dto/update-layout.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -44,5 +45,12 @@ export class RoomsController {
   @Roles('ADMIN')
   update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
     return this.roomsService.update(id, updateRoomDto);
+  }
+
+  @Patch(':id/layout')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  updateLayout(@Param('id') id: string, @Body() body: UpdateLayoutDto) {
+    return this.roomsService.updateLayout(id, body.layout);
   }
 }

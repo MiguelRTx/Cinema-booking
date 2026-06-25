@@ -30,6 +30,7 @@ import { ReservedSeat } from './modules/reservations/models/reserved-seat.model'
       models: [User, Movie, Room, Showtime, Reservation, ReservedSeat],
       autoLoadModels: true,
       synchronize: true,
+      sync: { alter: true },
     }),
     UsersModule,
     AuthModule,

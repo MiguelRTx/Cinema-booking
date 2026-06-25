@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsNotEmpty, Min } from 'class-validator';
+import { IsString, IsInt, IsNotEmpty, Min, IsOptional, IsObject } from 'class-validator';
 
 export class CreateRoomDto {
   @IsString()
@@ -12,4 +12,8 @@ export class CreateRoomDto {
   @IsInt()
   @Min(1)
   totalColumns: number;
+
+  @IsOptional()
+  @IsObject()
+  layout?: Record<string, string>;
 }

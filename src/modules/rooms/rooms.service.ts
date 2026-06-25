@@ -26,4 +26,9 @@ export class RoomsService {
     const room = await this.findOne(id);
     return room.update(updateRoomDto);
   }
+
+  async updateLayout(id: string, layout: Record<string, string>): Promise<Room> {
+    const room = await this.findOne(id);
+    return room.update({ layout });
+  }
 }

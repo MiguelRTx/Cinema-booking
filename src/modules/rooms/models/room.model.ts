@@ -19,6 +19,9 @@ export class Room extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   totalColumns: number;
 
+  @Column({ type: DataType.JSONB, allowNull: true, defaultValue: null })
+  layout: Record<string, string> | null;
+
   @HasMany(() => Showtime)
   showtimes: Showtime[];
 }
